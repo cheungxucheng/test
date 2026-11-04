@@ -8,7 +8,7 @@
 int main(int argc, char *argv[]) {
     tcs_init();
     RGBC * temp = get_RGBC();
-    printf("test %d", temp->r);
+    printf("test %d %d %d %d", temp->r, temp->g, temp->b, temp->c);
     free(temp);
     tcs_close();
     return 0;
