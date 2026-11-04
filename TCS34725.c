@@ -71,7 +71,7 @@ int enable(void) {
   }
 
   add[1] = TCS34725_ENABLE_PON | TCS34725_ENABLE_AEN;
-  if (write(tcs.fd, &add, 2) == -1) {
+  if (write(tcs.fd, add, 2) == -1) {
     perror("Write err: ");
     return -1;
   }
