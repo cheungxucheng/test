@@ -35,7 +35,7 @@ int set_integration(TCS34725IntegrationTime_t new_time) {
 }
 
 int set_gain(TCS34725Gain_t new_gain) {
-  uint8_t add = TCS34725_CMD_BIT | TCS34725_AGAIN | new_gain;
+  uint8_t add = TCS34725_CMD_BIT | TCS34725_CONTROL | new_gain;
   if (write(tcs.fd, &add, 1) == -1) {
     perror("Write err: ");
     return -1;
