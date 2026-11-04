@@ -41,7 +41,7 @@ int set_gain(TCS34725Gain_t new_gain) {
   return 0;
 }
 
-int enable() {
+int enable(void) {
   uint8_t add = TCS34725_CMD_BIT | TCS34725_ENABLE | TCS34725_ENABLE_PON;
   if (write(tcs.fd, add, 1) == -1) {
     perror("Write err: ");
@@ -62,7 +62,7 @@ int enable() {
   return 0;
 }
 
-int tcs_init() {
+int tcs_init(void) {
   int file;
   int adap_no = 1;
   char f_name[20];
@@ -97,7 +97,7 @@ int tcs_init() {
   return 0;
 }
 
-RGBC * get_RGBC() {
+RGBC * get_RGBC(void) {
   uint8_t = TCS34725_CMD_BIT | TCS34725_CMD_AUTO_INC | TCS34725_CDATAL;
   uint8_t data[8];
   RGBC * some = malloc(sizeof(RGBC));
@@ -158,7 +158,7 @@ RGBC * get_RGBC() {
   return some;
 }
 
-int tcs_close() {
+int tcs_close(void) {
   if (close(tcs.fd) == -1) {
     perror("close err");
     return -1;

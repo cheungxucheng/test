@@ -124,10 +124,10 @@ int set_integration(TCS34725IntegrationTime_t new_time);
 
 int set_gain(TCS34725Gain_t new_gain);
 
-int enable();
+int enable(void);
 
-int tcs_init();
+int tcs_init(void);
 
-RGBC * get_RGBC();
+RGBC * get_RGBC(void);
 
-int tcs_close();
+int tcs_close(void);
