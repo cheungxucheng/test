@@ -113,10 +113,10 @@ RGBC * get_RGBC() {
     return NULL;
   }
 
-  some.c = (uint16_t)data[1] | data[0];
-  some.r = (uint16_t)data[3] | data[2];
-  some.g = (uint16_t)data[5] | data[4];
-  some.b = (uint16_t)data[7] | data[6];
+  some->c = (uint16_t)data[1] | data[0];
+  some->r = (uint16_t)data[3] | data[2];
+  some->g = (uint16_t)data[5] | data[4];
+  some->b = (uint16_t)data[7] | data[6];
 
   switch(tcs.integ_time) {
     case TCS34725_INTEGRATIONTIME_2_4MS:
