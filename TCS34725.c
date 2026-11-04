@@ -100,7 +100,7 @@ int tcs_init(void) {
 }
 
 RGBC * get_RGBC(void) {
-  uint8_t = TCS34725_CMD_BIT | TCS34725_CMD_AUTO_INC | TCS34725_CDATAL;
+  uint8_t add = TCS34725_CMD_BIT | TCS34725_CMD_AUTO_INC | TCS34725_CDATAL;
   uint8_t data[8];
   RGBC * some = malloc(sizeof(RGBC));
   if (write(tcs.fd, &add, 1) == -1) {
