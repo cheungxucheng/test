@@ -26,26 +26,41 @@
 Sensor tcs = {0x29, 0, TCS34725_INTEGRATIONTIME_700MS, TCS34725_GAIN_1X};
 
 int set_integration(TCS34725IntegrationTime_t new_time) {
-  uint8_t add = TCS34725_CMD_BIT | TCS34725_ATIME | new_time;
-  if (write(tcs.fd, &add, 1) == -1) {
+  uint8_t add[2] = {
+    TCS34725_CMD_BIT | TCS34725_ATIME,
+    new_time
+  };
+
+  if (write(tcs.fd, add, 2) == -1) {
     perror("Write err: ");
     return -1;
   }
+
+  tcs.integ_time = new_time;
   return 0;
 }
 
 int set_gain(TCS34725Gain_t new_gain) {
-  uint8_t add = TCS34725_CMD_BIT | TCS34725_CONTROL | new_gain;
-  if (write(tcs.fd, &add, 1) == -1) {
+  uint8_t add[2] = {
+    TCS34725_CMD_BIT | TCS34725_CONTROL,
+    new_gain
+  };
+  if (write(tcs.fd, add, 2) == -1) {
     perror("Write err: ");
     return -1;
   }
+
+  tcs.gain = new_gain;
   return 0;
 }
 
 int enable(void) {
-  uint8_t add = TCS34725_CMD_BIT | TCS34725_ENABLE | TCS34725_ENABLE_PON;
-  if (write(tcs.fd, &add, 1) == -1) {
+  uint8_t add[2] = {
+    TCS34725_CMD_BIT | TCS34725_ENABLE,
+    TCS34725_ENABLE_PON
+  };
+
+  if (write(tcs.fd, add, 2) == -1) {
     perror("Write err: ");
     return -1;
   }
@@ -55,8 +70,8 @@ int enable(void) {
     return -1;
   }
 
-  add = TCS34725_CMD_BIT | TCS34725_ENABLE | TCS34725_ENABLE_PON | TCS34725_ENABLE_AEN;
-  if (write(tcs.fd, &add, 1) == -1) {
+  add[1] = TCS34725_ENABLE_PON | TCS34725_ENABLE_AEN;
+  if (write(tcs.fd, &add, 2) == -1) {
     perror("Write err: ");
     return -1;
   }
@@ -105,53 +120,61 @@ RGBC * get_RGBC(void) {
   RGBC * some = malloc(sizeof(RGBC));
   if (write(tcs.fd, &add, 1) == -1) {
     perror("Write err: ");
+    free(some);
     return NULL;
   }
   
   if (read(tcs.fd, data, 8) == -1) {
     perror("read err:");
+    free(some);
     return NULL;
   }
 
-  some->c = (uint16_t)data[1] | data[0];
-  some->r = (uint16_t)data[3] | data[2];
-  some->g = (uint16_t)data[5] | data[4];
-  some->b = (uint16_t)data[7] | data[6];
+  some->c = (uint16_t)data[1] << 8 | data[0];
+  some->r = (uint16_t)data[3] << 8 | data[2];
+  some->g = (uint16_t)data[5] << 8 | data[4];
+  some->b = (uint16_t)data[7] << 8 | data[6];
 
   switch(tcs.integ_time) {
     case TCS34725_INTEGRATIONTIME_2_4MS:
       if (usleep(3e3) == -1) {
         perror("sleep err: ");
+        free(some);
         return NULL;
       }
       break;
     case TCS34725_INTEGRATIONTIME_24MS:
       if (usleep(3e4) == -1) {
         perror("sleep err: ");
+        free(some);
         return NULL;
       }
       break;
     case TCS34725_INTEGRATIONTIME_50MS:
       if (usleep(5e4) == -1) {
         perror("sleep err: ");
+        free(some);
         return NULL;
       }
       break;
     case TCS34725_INTEGRATIONTIME_101MS:
       if (usleep(101e3) == -1) {
         perror("sleep err: ");
+        free(some);
         return NULL;
       }
       break;
     case TCS34725_INTEGRATIONTIME_154MS:
       if (usleep(154e3) == -1) {
         perror("sleep err: ");
+        free(some);
         return NULL;
       }
       break;
     case TCS34725_INTEGRATIONTIME_700MS:
       if (usleep(7e5) == -1) {
         perror("sleep err: ");
+        free(some);
         return NULL;
       }
       break;
