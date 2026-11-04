@@ -10,6 +10,7 @@
  * Description:: driver for tcs34725 sensor
  *
  **************************************************************/
+#include <stdint.h>
 // below lies the registered copied from waveshare...
 // I2C 7-bit address 0x29, 8-bit address 0x52
 #define TCS34725_ADDRESS          0x29
