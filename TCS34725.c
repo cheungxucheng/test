@@ -114,68 +114,69 @@ int tcs_init(void) {
   return 0;
 }
 
-RGBC * get_RGBC(void) {
+RGBC get_RGBC(void) {
   uint8_t add = TCS34725_CMD_BIT | TCS34725_CMD_AUTO_INC | TCS34725_CDATAL;
   uint8_t data[8];
-  RGBC * some = malloc(sizeof(RGBC));
+  RGBC some;
+  some.valid = 1;
   if (write(tcs.fd, &add, 1) == -1) {
     perror("Write err: ");
-    free(some);
-    return NULL;
+    some.valid = 0;
+    return some;
   }
   
   if (read(tcs.fd, data, 8) == -1) {
     perror("read err:");
-    free(some);
-    return NULL;
+    some.valid = 0;
+    return some;
   }
 
-  some->c = (uint16_t)data[1] << 8 | data[0];
-  some->r = (uint16_t)data[3] << 8 | data[2];
-  some->g = (uint16_t)data[5] << 8 | data[4];
-  some->b = (uint16_t)data[7] << 8 | data[6];
+  some.c = (uint16_t)data[1] << 8 | data[0];
+  some.r = (uint16_t)data[3] << 8 | data[2];
+  some.g = (uint16_t)data[5] << 8 | data[4];
+  some.b = (uint16_t)data[7] << 8 | data[6];
 
   switch(tcs.integ_time) {
     case TCS34725_INTEGRATIONTIME_2_4MS:
       if (usleep(3e3) == -1) {
         perror("sleep err: ");
-        free(some);
-        return NULL;
+        some.valid = 0;
+        return some;
       }
       break;
     case TCS34725_INTEGRATIONTIME_24MS:
       if (usleep(3e4) == -1) {
         perror("sleep err: ");
-        free(some);
-        return NULL;
+        some.valid = 0;
+        return some;
       }
       break;
     case TCS34725_INTEGRATIONTIME_50MS:
       if (usleep(5e4) == -1) {
         perror("sleep err: ");
-        free(some);
-        return NULL;
+        some.valid = 0;
+        return some;
       }
       break;
     case TCS34725_INTEGRATIONTIME_101MS:
       if (usleep(101e3) == -1) {
         perror("sleep err: ");
-        free(some);
-        return NULL;
+        some.valid = 0;
+        return some;
       }
       break;
     case TCS34725_INTEGRATIONTIME_154MS:
       if (usleep(154e3) == -1) {
         perror("sleep err: ");
-        free(some);
-        return NULL;
+        some.valid = 0;
+        return some;
       }
       break;
     case TCS34725_INTEGRATIONTIME_700MS:
       if (usleep(7e5) == -1) {
         perror("sleep err: ");
-        free(some);
-        return NULL;
+        some.valid = 0;
+        return some;
       }
       break;
   }

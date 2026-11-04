@@ -103,6 +103,7 @@ typedef struct RGBC {
   uint16_t g;
   uint16_t b;
   uint16_t c;
+  int valid;
 } RGBC;
 
 typedef struct {
